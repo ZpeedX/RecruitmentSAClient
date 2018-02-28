@@ -16,7 +16,6 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import model.Reply;
 import model.User;
 
 /**
@@ -32,9 +31,7 @@ public class RestCommunication {
     private static final String LOGOUT_PATH = "logout";
     private static final String AUTHORIZATION_SCHEMA = "Bearer ";
 
-    public static void test(String username, String password) {
-        System.out.println("hello " + username + " " + password);
-    }
+ 
 
     public static Response login(String user, String pass) {
         Invocation.Builder request = getRequestToPath(Arrays.asList(AUTH_PATH, LOGIN_PATH));
@@ -51,14 +48,9 @@ public class RestCommunication {
      * @param json registration credentials sent to the server.
      * @return Response with the registration attempt.
      */
-    public static Response register(String json) {
+    public static Response register(User json) {
         Invocation.Builder request = getRequestToPath(Arrays.asList(AUTH_PATH, REGISTER_PATH));
-
-        Response registerResponse = request.post(Entity.json(json));
-        registerResponse.bufferEntity();
-        //exctractTokenAndRoleFromResponse(registerResponse);
-
-        return registerResponse;
+        return request.post(Entity.entity(json, MediaType.APPLICATION_JSON));
     }
 
     /**
@@ -86,9 +78,8 @@ public class RestCommunication {
     public static Response logout() {
         Invocation.Builder request = getRequestToPath(Arrays.asList(AUTH_PATH, LOGOUT_PATH));
         request = addAuthorizationHeader(request);
-
         Response logoutResponse = request.get();
-
+        
         return logoutResponse;
     }
 

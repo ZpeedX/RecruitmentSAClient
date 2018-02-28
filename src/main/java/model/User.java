@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class User {
     private String username;
     private String password;
-    private String firstName;
+    private String name;
     private String surname;
     private String ssn;
     private String email;
@@ -20,10 +20,10 @@ public class User {
         this.username = username;
         this.password = password;
     }
-    public User(String username, String password, String firstname, String surname, String ssn, String email){
+    public User(String username, String password, String name, String surname, String ssn, String email){
         this.username = username;
         this.password = password;
-        this.firstName = firstname;
+        this.name = name;
         this.surname = surname;
         this.ssn = ssn;
         this.email = email;
@@ -45,12 +45,12 @@ public class User {
         this.password = password;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getName() {
+        return name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setFirstName(String name) {
+        this.name = name;
     }
 
     public String getSurname() {
