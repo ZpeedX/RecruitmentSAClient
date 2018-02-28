@@ -36,17 +36,10 @@ public class RestCommunication {
         System.out.println("hello " + username + " " + password);
     }
 
-    public static String login(String user, String pass) {
+    public static Response login(String user, String pass) {
         Invocation.Builder request = getRequestToPath(Arrays.asList(AUTH_PATH, LOGIN_PATH));
         User newUser = new User(user, pass);
-        Response response
-                = request.post(Entity.entity(newUser, MediaType.APPLICATION_JSON));
-        response.bufferEntity();
-        
-        System.out.println(response.readEntity(String.class));
-        //Reply r = response.readEntity(Reply.class);
-        //System.out.println(r.getToken());
-        return "";
+        return request.post(Entity.entity(newUser, MediaType.APPLICATION_JSON));
     }
     
     
