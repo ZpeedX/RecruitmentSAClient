@@ -1,11 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package rest;
 
-import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 import java.util.List;
 import javax.ws.rs.client.Client;
@@ -19,7 +14,7 @@ import javax.ws.rs.core.Response;
 import model.User;
 
 /**
- *
+ * Takes credentials from the controller and sends them over to the server and returns a Response
  * @author Emil
  */
 public class RestCommunication {
@@ -32,7 +27,14 @@ public class RestCommunication {
     private static final String AUTHORIZATION_SCHEMA = "Bearer ";
 
  
-
+    /**
+     * This method sends a login json object to the remote server to login the
+     * user.
+     *
+     * @param user  the username as entered by user
+     * @param pass  the password as entered by user
+     * @return Response the servers response to the login attempt.
+     */
     public static Response login(String user, String pass) {
         Invocation.Builder request = getRequestToPath(Arrays.asList(AUTH_PATH, LOGIN_PATH));
         User newUser = new User(user, pass);

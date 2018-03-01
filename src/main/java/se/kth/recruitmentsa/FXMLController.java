@@ -18,6 +18,11 @@ import model.Register;
 import model.User;
 import rest.RestCommunication;
 
+/**
+ * Controller handles all inputs from the user and calls functions needed
+ *
+ * @author Emil
+ */
 public class FXMLController implements Initializable {
 
     @FXML
@@ -48,6 +53,9 @@ public class FXMLController implements Initializable {
             logged.setVisible(true);
             logged.setText("Welcome " + userBox.getText() + " Token: " + json.getString("token"));
             hideFields();
+        } else {
+            logged.setVisible(true);
+            logged.setText("Invalid user credentials, please try again");
         }
     }
 
@@ -77,7 +85,7 @@ public class FXMLController implements Initializable {
                 gridPane.getScene().getWindow()
         );
         User newUser = reg.getUser();
-        if (newUser != null) {
+        if (reg.getFilled().equals("done")) {
             Response response = RestCommunication.register(newUser);
             JsonObject json = extractJsonObjFromResponse(response);
             String error = json.getString("error", "");
@@ -85,6 +93,9 @@ public class FXMLController implements Initializable {
                 logged.setVisible(true);
                 logged.setText("Welcome " + newUser.getUsername() + " Token: " + json.getString("token"));
                 hideFields();
+            } else {
+                logged.setVisible(true);
+                logged.setText("Username already taken, please try again");
             }
         }
         System.out.println(newUser.getName());
@@ -96,12 +107,24 @@ public class FXMLController implements Initializable {
         logged.setVisible(false);
     }
 
+    /**
+     * Sets the logout button and label to invisible at launch
+     *
+     * @param url unused
+     * @param rb unused
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         logoutBtn.setVisible(false);
         logged.setVisible(false);
     }
 
+    /**
+     * Creates JsonObject from Response
+     *
+     * @param res Response from server
+     * @return JsonObject with data from server
+     */
     public JsonObject extractJsonObjFromResponse(Response res) {
         String s = res.readEntity(String.class);
         return Json.createReader(new StringReader(s)).readObject();

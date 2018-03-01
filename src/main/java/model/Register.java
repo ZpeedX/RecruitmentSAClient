@@ -5,15 +5,13 @@
  */
 package model;
 
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -23,10 +21,23 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
 
+/**
+ * Class containing a register field where the user can enter credentials and
+ * submit.
+ *
+ * @author Emil
+ */
 public class Register {
 
-
     private User newUser;
+    private String filled;
+
+    /**
+     * Takes the Window to know where to place the register pop-up and then
+     * creates the window will all required fields.
+     *
+     * @param owner
+     */
     public Register(Window owner) {
         final Stage dialog = new Stage();
 
@@ -54,36 +65,55 @@ public class Register {
         final Label emailL = new Label("Email");
         submitButton.setDefaultButton(true);
         submitButton.setOnAction(new EventHandler<ActionEvent>() {
+            /**
+             * The button has a function that closes the window if no field is
+             * empty and passwords match empty and the passwords match. And sets a  new User and the confirms everything is filled.
+             *
+             * @param t ActionEvent
+             */
             @Override
             public void handle(ActionEvent t) {
-                if(passField.getText().equals(pass2Field.getText())){
-                dialog.close();
-                }else{
-                    System.out.println("Passwords not the same");
+                if (userField.getText().isEmpty() || passField.getText().isEmpty() || pass2Field.getText().isEmpty() || usernameField.getText().isEmpty() || surnameField.getText().isEmpty() || emailField.getText().isEmpty() || ssnField.getText().isEmpty()) {
+                    Alert alert = new Alert(AlertType.INFORMATION);
+                    alert.setTitle("Information Dialog");
+                    alert.setHeaderText("Missing credentials warning:");
+                    alert.setContentText("Please fill in all the forms!");
+                    alert.showAndWait();
+                } else {
+                    if (passField.getText().equals(pass2Field.getText())) {
+                        newUser = new User(usernameField.getText(), passField.getText(), userField.getText(), surnameField.getText(), ssnField.getText(), emailField.getText());
+                        filled = "done";
+                        dialog.close();
+                    } else {
+                        passField.setText("");
+                        pass2Field.setText("");
+                        pass2Field.setPromptText("Paswords do not match");
+                        passField.setPromptText("Paswords do not match");
+                    }
                 }
+
             }
         });
         usernameField.setMinHeight(TextField.USE_PREF_SIZE);
         usernameField.setPromptText("Username");
-        
+
         passField.setMinHeight(TextField.USE_PREF_SIZE);
         passField.setPromptText("Password");
-        
+
         pass2Field.setMinHeight(TextField.USE_PREF_SIZE);
         pass2Field.setPromptText("Password");
-        
+
         userField.setMinHeight(TextField.USE_PREF_SIZE);
         userField.setPromptText("First name");
-        
+
         surnameField.setMinHeight(TextField.USE_PREF_SIZE);
         surnameField.setPromptText("Surname");
-        
+
         ssnField.setMinHeight(TextField.USE_PREF_SIZE);
         ssnField.setPromptText("Social security number");
-        
+
         emailField.setMinHeight(TextField.USE_PREF_SIZE);
         emailField.setPromptText("Email");
-        
 
         final VBox layout = new VBox(10);
         layout.setAlignment(Pos.CENTER_RIGHT);
@@ -108,14 +138,24 @@ public class Register {
 
         dialog.setScene(new Scene(layout));
         dialog.showAndWait();
-        if(passField.getText().equals(pass2Field.getText())){
-        newUser = new User(usernameField.getText(), passField.getText(), userField.getText(), surnameField.getText(), ssnField.getText(), emailField.getText());
-        }
     }
 
+    /**
+     * Returns the user created from the entered credentials.
+     *
+     * @return user from entered credentials
+     */
     public User getUser() {
         return newUser;
     }
 
+    /**
+     * Returns a string confirming the user has been registered.
+     *
+     * @return string confirming registration
+     */
+    public String getFilled() {
+        return filled;
+    }
 
 }
