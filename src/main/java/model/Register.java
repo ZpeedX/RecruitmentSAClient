@@ -30,7 +30,7 @@ import javafx.stage.Window;
 public class Register {
 
     private User newUser;
-    private String filled;
+    private String filled = "";
 
     /**
      * Takes the Window to know where to place the register pop-up and then

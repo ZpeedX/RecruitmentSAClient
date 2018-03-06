@@ -98,7 +98,7 @@ public class FXMLController implements Initializable {
                 logged.setText("Username already taken, please try again");
             }
         }
-        System.out.println(newUser.getName());
+
     }
 
     @FXML
