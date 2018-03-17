@@ -1,4 +1,4 @@
-package se.kth.recruitmentsa;
+package view;
 
 import java.io.StringReader;
 import java.net.URL;
@@ -48,8 +48,7 @@ public class FXMLController implements Initializable {
     private void loginHandler(ActionEvent event) {
         Response response = RestCommunication.login(userBox.getText(), passBox.getText());
         JsonObject json = extractJsonObjFromResponse(response);
-        String error = json.getString("error", "");
-        if (error.isEmpty()) {
+        if (response.getStatus() == Response.Status.OK.getStatusCode()) {
             logged.setVisible(true);
             logged.setText("Welcome " + userBox.getText() + " Token: " + json.getString("token"));
             hideFields();
@@ -88,17 +87,30 @@ public class FXMLController implements Initializable {
         if (reg.getFilled().equals("done")) {
             Response response = RestCommunication.register(newUser);
             JsonObject json = extractJsonObjFromResponse(response);
-            String error = json.getString("error", "");
-            if (error.isEmpty()) {
+            if (response.getStatus() == Response.Status.OK.getStatusCode()) {
                 logged.setVisible(true);
                 logged.setText("Welcome " + newUser.getUsername() + " Token: " + json.getString("token"));
                 hideFields();
             } else {
-                logged.setVisible(true);
-                logged.setText("Username already taken, please try again");
+                unsuccessfulRegister(json);
             }
         }
 
+    }
+    private void unsuccessfulRegister(JsonObject json) {
+        int errorCode = json.getInt("error", 0);
+
+        switch (errorCode) {
+            case 1:
+                logged.setText("Username already taken, please try again");
+                break;
+            case 2:
+                logged.setText("Social security number already registered");
+                break;
+            default:
+                break;
+        }
+        logged.setVisible(true);
     }
 
     @FXML
